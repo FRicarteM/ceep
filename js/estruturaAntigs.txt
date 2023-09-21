@@ -1,0 +1,67 @@
+//A função main incapsula o código, mantendo a regra de negócio ocuta.
+function main() {
+    const cadastrarTarefa = document.querySelector("[data-form-button]");
+
+    /*
+    Passando uma função anonima dentro do addEventListener usando Lambda.
+    mesmo resultado que obtemos abaixo.
+    cadastrarTarefa.addEventListener("click", () => {
+        const input = document.querySelector("[data-form-input]");
+        const valor = input.value;  
+    });*/
+
+    function capturarTarefa(evento) {
+        evento.preventDefault();
+
+        const lista = document.querySelector("[data-list]");
+        const input = document.querySelector("[data-form-input]");
+        const valor = input.value;
+        console.log(valor);
+
+        const tarefa = document.createElement("li");
+        tarefa.classList.add("task");
+        const conteudo = `<p class="content">${valor}</p>`;
+
+        tarefa.innerHTML = conteudo;
+        tarefa.appendChild(BotaoConcluir());
+        tarefa.appendChild(BotaoDelete());
+        lista.appendChild(tarefa);
+
+        input.value = "";
+    }
+
+    cadastrarTarefa.addEventListener("click", capturarTarefa);
+
+    //Componentes
+    //OBS: Eles sempre começam com maiúsculo.
+    const BotaoConcluir = () => {
+        const botaoConcluir = document.createElement("button");
+        botaoConcluir.innerText = "Concluir";
+        botaoConcluir.addEventListener(
+            "click",
+            /*Nesta arrow function eu poderia ter feito uma classe a parte
+        e lançado ela no seu lugar.*/
+            (evento) => {
+                const concluir = evento.target;
+                const tarefaCompleta = concluir.parentElement;
+
+                tarefaCompleta.classList.toggle("done");
+            }
+        );
+        return botaoConcluir;
+    };
+
+    const BotaoDelete = () => {
+        const botaoDeletar = document.createElement("button");
+        botaoDeletar.innerText = "Deletar";
+        botaoDeletar.addEventListener("click", (evento) => {
+            const deletar = evento.target;
+            const deletarTarefa = deletar.parentElement;
+
+            deletarTarefa.remove();
+        });
+        return botaoDeletar;
+    };
+}
+
+main();
